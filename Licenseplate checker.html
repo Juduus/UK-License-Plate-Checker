@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UK License Plate Checker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #222;
+    margin: 40px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  body.dark-mode {
+    background-color: #121212;
+    color: #ddd;
+  }
+  h1 {
+    text-align: center;
+  }
+  #plateInput {
+    font-size: 1.2rem;
+    padding: 8px;
+    width: 250px;
+  }
+  #checkBtn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s;
+  }
+  #checkBtn:hover {
+    background-color: #0056b3;
+  }
+  #result {
+    margin-top: 25px;
+    font-size: 1.2rem;
+    min-height: 40px;
+  }
+
+  .toggle-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+  }
+
+  #darkModeToggle, #instagramBtn {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    color: white;
+  }
+
+  #darkModeToggle {
+    background-color: #007bff;
+  }
+  #darkModeToggle:hover {
+    background-color: #0056b3;
+  }
+
+  #instagramBtn {
+    background-color: #e1306c; /* Instagram pink */
+  }
+  #instagramBtn:hover {
+    background-color: #ad1457;
+  }
+</style>
+</head>
+<body>
+
+<h1>UK License Plate Checker</h1>
+
+<div style="text-align:center;">
+  <input id="plateInput" type="text" placeholder="Enter license plate (e.g. AB08XYZ)" maxlength="7" />
+  <button id="checkBtn">Check Plate</button>
+
+  <div id="result"></div>
+</div>
+
+<div class="toggle-container">
+  <button id="darkModeToggle">Toggle Dark Mode</button>
+  <button id="instagramBtn" onclick="window.open('https://www.instagram.com/gingerbreadjude/', '_blank')">Instagram</button>
+</div>
+
+<script>
+  const plateInput = document.getElementById('plateInput');
+  const checkBtn = document.getElementById('checkBtn');
+  const result = document.getElementById('result');
+  const darkModeToggle = document.getElementById('darkModeToggle');
+
+  function checkPlate(plate) {
+    if (plate.length < 4) {
+      return 'Please enter a valid license plate.';
+    }
+    plate = plate.toUpperCase();
+
+    const p1 = plate[0];
+    const p2 = plate[1];
+    let p3 = plate.substring(2,4);
+    let yearNum = parseInt(p3, 10);
+
+    if (isNaN(yearNum)) {
+      return 'Year portion of plate is invalid.';
+    }
+
+    let region = '';
+    let town = '';
+
+    // Same region-town logic as your python code
+    if (p1 === 'A') {
+      region = 'Anglia';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'J', 'K', 'M', 'N'].includes(p2)) {
+        town = 'Peterborough';
+      } else if (['O', 'P', 'R', 'S', 'T', 'U'].includes(p2)) {
+        town = 'Norwich';
+      } else if (['V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Ipswich';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'B') {
+      region = 'Anglia';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Birmingham';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'C') {
+      region = 'Wales (Cymru)';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'O'].includes(p2)) {
+        town = 'Cardiff';
+      } else if (['P', 'R', 'S', 'T', 'U', 'V'].includes(p2)) {
+        town = 'Swansea';
+      } else if (['W', 'X', 'Y'].includes(p2)) {
+        town = 'Bangor';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'D') {
+      region = 'Deeside';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K'].includes(p2)) {
+        town = 'Chester';
+      } else if (['L', 'M', 'N', 'O', 'P', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Shrewsbury';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'E') {
+      region = 'Essex';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Chelmsford';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'F') {
+      region = 'Forest & Fens';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P'].includes(p2)) {
+        town = 'Nottingham';
+      } else if (['R', 'S', 'T', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Lincoln';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'G') {
+      region = 'Garden of England';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N'].includes(p2)) {
+        town = 'Maidstone';
+      } else if (['P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Brighton';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'H') {
+      region = 'Hampshire, Dorset and Isle of Wight';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J'].includes(p2)) {
+        town = 'Maidstone';
+      } else if (['K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'X', 'Y'].includes(p2)) {
+        town = 'Brighton';
+      } else if (p2 === 'W') {
+        town = 'Isle of Wight';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'K') {
+      region = 'No official mnemonic';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L'].includes(p2)) {
+        town = 'Borehamwood';
+      } else if (['M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Northampton';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'L') {
+      region = 'London';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J'].includes(p2)) {
+        town = 'Wimbledon';
+      } else if (['K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'London';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'M') {
+      region = 'Manchester';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Manchester';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'N') {
+      region = 'North';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Newcastle';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'O') {
+      region = 'Oxford';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Oxford';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'P') {
+      region = 'Preston';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Preston';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'R') {
+      region = 'Reading';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Reading';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'S') {
+      region = 'Scotland';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Edinburgh';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'T') {
+      region = 'North Thames';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Ipswich';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'V') {
+      region = 'Severn Valley';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Worcester';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'W') {
+      region = 'West of England';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Bristol';
+      } else {
+        town = 'Unknown';
+      }
+    } else if (p1 === 'Y') {
+      region = 'Yorkshire';
+      if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'].includes(p2)) {
+        town = 'Leeds';
+      } else {
+        town = 'Unknown';
+      }
+    } else {
+      region = 'Unknown';
+      town = 'Unknown';
+    }
+
+    // Determine year
+    let year = 0;
+    if (yearNum >= 50) {
+      year = 1900 + yearNum;
+    } else {
+      year = 2000 + yearNum;
+    }
+
+    return `Region: ${region}, Town: ${town}, Year: ${year}`;
+  }
+
+  checkBtn.addEventListener('click', () => {
+    const plate = plateInput.value.trim();
+    if (!plate) {
+      result.textContent = 'Please enter a license plate.';
+      return;
+    }
+    const message = checkPlate(plate);
+    result.textContent = message;
+  });
+
+  darkModeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+  });
+</script>
+
+</body>
+</html>
